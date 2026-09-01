@@ -1,0 +1,72 @@
+<div class="login-page">
+  <div class="login-container">
+    <div class="login-brand">
+      <mat-icon class="brand-icon">local_shipping</mat-icon>
+      <h1>Bravial</h1>
+      <p>Sistema Logistico - Demo</p>
+    </div>
+
+    <mat-card class="login-card">
+      <mat-card-content>
+        <h2>Bem-vindo</h2>
+        <p class="login-subtitle">Entre com suas credenciais para acessar o demo.</p>
+
+        <!-- Demo credentials hint -->
+        <div class="demo-hint">
+          <mat-icon>info</mat-icon>
+          <div>
+            <strong>Credenciais de demo:</strong><br>
+            <span class="credential">admin&#64;techframe.com / demo12345</span>
+          </div>
+        </div>
+
+        <form [formGroup]="formulario" (ngSubmit)="entrar()">
+          <mat-form-field appearance="outline" class="campo-completo">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" autocomplete="username" />
+            <mat-icon matSuffix>email</mat-icon>
+            @if (formulario.get('email')?.hasError('required') && formulario.get('email')?.touched) {
+              <mat-error>Informe seu email</mat-error>
+            }
+            @if (formulario.get('email')?.hasError('email') && formulario.get('email')?.touched) {
+              <mat-error>Email invalido</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="campo-completo">
+            <mat-label>Senha</mat-label>
+            <input matInput type="password" formControlName="senha" autocomplete="current-password" />
+            <mat-icon matSuffix>lock</mat-icon>
+            @if (formulario.get('senha')?.hasError('required') && formulario.get('senha')?.touched) {
+              <mat-error>Informe sua senha</mat-error>
+            }
+          </mat-form-field>
+
+          @if (mensagemErro()) {
+            <div class="error-banner">
+              <mat-icon>error</mat-icon>
+              <span>{{ mensagemErro() }}</span>
+            </div>
+          }
+
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            class="login-btn"
+            [disabled]="carregando()"
+          >
+            @if (carregando()) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              <mat-icon>login</mat-icon>
+              Entrar
+            }
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <p class="login-footer">Demo publica do Bravial - TechFrame Tecnologia Ltda</p>
+  </div>
+</div>

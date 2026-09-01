@@ -1,0 +1,141 @@
+<h1>Meu Ponto</h1>
+
+@if (carregando()) {
+  <div class="carregando">
+    <mat-spinner diameter="32"></mat-spinner>
+  </div>
+} @else {
+  <!-- Today's Card -->
+  <mat-card class="card cartao-hoje">
+    <mat-card-content>
+      @let hoje = registroDeHoje();
+
+      @if (!hoje || !hoje.horaEntrada) {
+        <div class="ponto-empty">
+          <mat-icon class="ponto-icon">fingerprint</mat-icon>
+          <p>Você ainda não bateu entrada hoje.</p>
+          <button mat-flat-button color="primary" class="ponto-main-btn" [disabled]="registrando()" (click)="bater('entrada')">
+            <mat-icon>login</mat-icon>
+            Bater Entrada
+          </button>
+        </div>
+      } @else {
+        <!-- Status Grid -->
+        <div class="status-grid">
+          <div class="status-item" [class.completed]="hoje.horaEntrada">
+            <div class="status-dot" [class.active]="hoje.horaEntrada"></div>
+            <div class="status-content">
+              <span class="status-label">Entrada</span>
+              <span class="status-time">{{ formatarHora(hoje.horaEntrada) }}</span>
+            </div>
+          </div>
+          <div class="status-item" [class.completed]="hoje.horaSaidaIntervalo">
+            <div class="status-dot" [class.active]="hoje.horaSaidaIntervalo"></div>
+            <div class="status-content">
+              <span class="status-label">Saída Intervalo</span>
+              <span class="status-time">{{ formatarHora(hoje.horaSaidaIntervalo) }}</span>
+            </div>
+          </div>
+          <div class="status-item" [class.completed]="hoje.horaVoltaIntervalo">
+            <div class="status-dot" [class.active]="hoje.horaVoltaIntervalo"></div>
+            <div class="status-content">
+              <span class="status-label">Volta Intervalo</span>
+              <span class="status-time">{{ formatarHora(hoje.horaVoltaIntervalo) }}</span>
+            </div>
+          </div>
+          <div class="status-item" [class.completed]="hoje.horaSaida">
+            <div class="status-dot" [class.active]="hoje.horaSaida"></div>
+            <div class="status-content">
+              <span class="status-label">Saída</span>
+              <span class="status-time">{{ formatarHora(hoje.horaSaida) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        @if (!hoje.horaSaida) {
+          <div class="ponto-actions">
+            @if (!hoje.horaSaidaIntervalo) {
+              <button class="ponto-action-btn" [disabled]="registrando()" (click)="bater('saidaIntervalo')">
+                <div class="action-icon warning">
+                  <mat-icon>free_breakfast</mat-icon>
+                </div>
+                <span>Sair p/ Intervalo</span>
+              </button>
+            }
+            @if (hoje.horaSaidaIntervalo && !hoje.horaVoltaIntervalo) {
+              <button class="ponto-action-btn" [disabled]="registrando()" (click)="bater('voltaIntervalo')">
+                <div class="action-icon primary">
+                  <mat-icon>play_arrow</mat-icon>
+                </div>
+                <span>Voltar do Intervalo</span>
+              </button>
+            }
+            <button class="ponto-action-btn" [disabled]="registrando()" (click)="bater('saida')">
+              <div class="action-icon success">
+                <mat-icon>logout</mat-icon>
+              </div>
+              <span>Bater Saída</span>
+            </button>
+          </div>
+        } @else {
+          <div class="dia-completo">
+            <mat-icon>check_circle</mat-icon>
+            <span>Ponto do dia completo!</span>
+          </div>
+        }
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <!-- History -->
+  <h2>Histórico do Mês</h2>
+
+  @if (registros().length === 0) {
+    <mat-card class="empty-card">
+      <mat-card-content>
+        <p>Nenhum registro neste período.</p>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <mat-card>
+      <table mat-table [dataSource]="registros()" class="tabela">
+        <ng-container matColumnDef="data">
+          <th mat-header-cell *matHeaderCellDef>Data</th>
+          <td mat-cell *matCellDef="let r">{{ r.data }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="horaEntrada">
+          <th mat-header-cell *matHeaderCellDef>Entrada</th>
+          <td mat-cell *matCellDef="let r">
+            <span [class.time-present]="r.horaEntrada">{{ formatarHora(r.horaEntrada) }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="horaSaidaIntervalo">
+          <th mat-header-cell *matHeaderCellDef>Saída Intervalo</th>
+          <td mat-cell *matCellDef="let r">
+            <span [class.time-present]="r.horaSaidaIntervalo">{{ formatarHora(r.horaSaidaIntervalo) }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="horaVoltaIntervalo">
+          <th mat-header-cell *matHeaderCellDef>Volta Intervalo</th>
+          <td mat-cell *matCellDef="let r">
+            <span [class.time-present]="r.horaVoltaIntervalo">{{ formatarHora(r.horaVoltaIntervalo) }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="horaSaida">
+          <th mat-header-cell *matHeaderCellDef>Saída</th>
+          <td mat-cell *matCellDef="let r">
+            <span [class.time-present]="r.horaSaida">{{ formatarHora(r.horaSaida) }}</span>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+        <tr mat-row *matRowDef="let row; columns: colunas"></tr>
+      </table>
+    </mat-card>
+  }
+}

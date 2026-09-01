@@ -1,0 +1,20 @@
+.git
+.github
+.vscode
+.idea
+*.iml
+*.log
+
+# Backend
+logistica-api/target
+logistica-api/.env
+
+# Frontend
+logistica-app/node_modules
+logistica-app/.angular
+logistica-app/dist
+
+# Root
+.env
+.env.example
+*.md

@@ -1,0 +1,137 @@
+.cartao-hoje {
+  max-width: 600px;
+  margin-bottom: 2rem;
+}
+
+/* ===== Empty State ===== */
+
+.ponto-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.ponto-icon {
+  font-size: 4rem;
+  width: 4rem;
+  height: 4rem;
+  color: #1976d2;
+}
+
+.ponto-main-btn {
+  padding: 0.75rem 2rem !important;
+  font-size: 1rem !important;
+}
+
+/* ===== Status Timeline ===== */
+
+.status-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 1.5rem;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-left: 2px solid #e2e8f0;
+  margin-left: 8px;
+  padding-left: 1.5rem;
+  position: relative;
+
+  &:first-child {
+    border-left-color: #1976d2;
+  }
+
+  &.completed {
+    .status-dot {
+      background: #1976d2;
+      border-color: #1976d2;
+    }
+
+    .status-time {
+      color: #1e293b;
+      font-weight: 600;
+    }
+  }
+
+  &:last-child {
+    border-left-color: transparent;
+  }
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #e2e8f0;
+  background: white;
+  flex-shrink: 0;
+  position: absolute;
+  left: -7px;
+
+  &.active {
+    background: #1976d2;
+    border-color: #1976d2;
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+  }
+}
+
+.status-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.status-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-time {
+  font-size: 1.125rem;
+  color: #94a3b8;
+}
+
+/* ===== Day Complete ===== */
+
+.dia-completo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #16a34a;
+  font-weight: 500;
+  padding: 0.75rem;
+  background: #dcfce7;
+  border-radius: 8px;
+
+  mat-icon {
+    color: #16a34a;
+  }
+}
+
+/* ===== History Table ===== */
+
+.time-present {
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.empty-card {
+  text-align: center;
+  padding: 2rem;
+}
+
+@media (max-width: 600px) {
+  .ponto-actions {
+    grid-template-columns: 1fr;
+  }
+}

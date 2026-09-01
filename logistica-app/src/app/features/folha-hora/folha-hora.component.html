@@ -1,0 +1,46 @@
+<h1>Folha de Hora</h1>
+<p>Gere a segunda via da sua folha de ponto em PDF para um período.</p>
+
+<mat-card class="card">
+  <mat-card-content>
+    <form [formGroup]="formulario" (ngSubmit)="baixar()" class="formulario">
+      <div class="date-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Data Início</mat-label>
+          <input matInput [matDatepicker]="pickerInicio" formControlName="inicio" />
+          <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+          <mat-datepicker #pickerInicio></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Data Fim</mat-label>
+          <input matInput [matDatepicker]="pickerFim" formControlName="fim" />
+          <mat-datepicker-toggle matIconSuffix [for]="pickerFim"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFim></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      @if (podeGerarDeOutroUsuario()) {
+        <mat-form-field appearance="outline" class="campo-completo">
+          <mat-label>Funcionário (deixe em branco para a sua própria folha)</mat-label>
+          <mat-select formControlName="usuarioId">
+            <mat-option [value]="null">-- Minha própria folha --</mat-option>
+            @for (funcionario of funcionarios; track funcionario.id) {
+              <mat-option [value]="funcionario.id">{{ funcionario.nome }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+
+      <button mat-flat-button color="primary" type="submit" [disabled]="gerando" class="download-btn">
+        @if (gerando) {
+          <mat-spinner diameter="20"></mat-spinner>
+          Gerando...
+        } @else {
+          <mat-icon>download</mat-icon>
+          Baixar PDF
+        }
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>

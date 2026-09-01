@@ -1,0 +1,38 @@
+# =============================================================================
+# Bravial Demo - Deploy to Railway
+# =============================================================================
+# Deploys the backend API to Railway on push to main.
+# Requires RAILWAY_TOKEN and RAILWAY_SERVICE_ID secrets.
+
+name: Deploy to Railway
+
+on:
+  push:
+    branches: [main]
+
+env:
+  RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+jobs:
+  deploy:
+    name: Deploy Backend
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy backend to Railway
+        run: railway up --service ${{ secrets.RAILWAY_SERVICE_ID }}
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Verify deployment
+        run: |
+          echo "Waiting 30s for deployment to stabilize..."
+          sleep 30
+          railway status --service ${{ secrets.RAILWAY_SERVICE_ID }}

@@ -1,0 +1,88 @@
+<div class="shell-layout">
+  <!-- Top Toolbar -->
+  <mat-toolbar color="primary" class="toolbar">
+    <button mat-icon-button class="menu-toggle" (click)="menuAberto.set(!menuAberto())" aria-label="Menu">
+      <mat-icon>{{ menuAberto() ? 'close' : 'menu' }}</mat-icon>
+    </button>
+
+    <button class="app-title" (click)="irParaDashboard()">Bravial</button>
+
+    <!-- Desktop Navigation -->
+    <nav class="nav-desktop">
+      <a mat-button routerLink="/dashboard/ativos" class="nav-link">
+        <mat-icon>inventory_2</mat-icon>
+        Ativos
+      </a>
+      <a mat-button routerLink="/dashboard/ponto" class="nav-link">
+        <mat-icon>access_time</mat-icon>
+        Ponto
+      </a>
+      <a mat-button routerLink="/dashboard/folha-hora" class="nav-link">
+        <mat-icon>description</mat-icon>
+        Folha de Hora
+      </a>
+      @if (authService.temPapel('ADMIN', 'GESTOR')) {
+        <a mat-button routerLink="/dashboard/funcionarios" class="nav-link">
+          <mat-icon>people</mat-icon>
+          Funcionários
+        </a>
+      }
+    </nav>
+
+    <span class="espaco"></span>
+
+    @if (authService.usuario(); as usuario) {
+      <div class="user-info">
+        <mat-icon class="user-avatar">person</mat-icon>
+        <span class="user-name">{{ usuario.nome }}</span>
+      </div>
+      <button mat-icon-button (click)="sair()" aria-label="Sair" title="Sair">
+        <mat-icon>logout</mat-icon>
+      </button>
+    }
+  </mat-toolbar>
+
+  <!-- Mobile Sidebar -->
+  @if (menuAberto()) {
+    <div class="sidebar-overlay" (click)="menuAberto.set(false)"></div>
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <button class="sidebar-title" (click)="irParaDashboard()">Bravial</button>
+      </div>
+      <div class="sidebar-nav">
+        <a routerLink="/dashboard/ativos" (click)="menuAberto.set(false)" class="sidebar-link">
+          <mat-icon>inventory_2</mat-icon>
+          <span>Ativos</span>
+        </a>
+        <a routerLink="/dashboard/ponto" (click)="menuAberto.set(false)" class="sidebar-link">
+          <mat-icon>access_time</mat-icon>
+          <span>Ponto</span>
+        </a>
+        <a routerLink="/dashboard/folha-hora" (click)="menuAberto.set(false)" class="sidebar-link">
+          <mat-icon>description</mat-icon>
+          <span>Folha de Hora</span>
+        </a>
+        @if (authService.temPapel('ADMIN', 'GESTOR')) {
+          <a routerLink="/dashboard/funcionarios" (click)="menuAberto.set(false)" class="sidebar-link">
+            <mat-icon>people</mat-icon>
+            <span>Funcionários</span>
+          </a>
+        }
+      </div>
+      @if (authService.usuario(); as usuario) {
+        <div class="sidebar-footer">
+          <mat-icon>person</mat-icon>
+          <span>{{ usuario.nome }}</span>
+          <button mat-icon-button (click)="sair()" aria-label="Sair">
+            <mat-icon>logout</mat-icon>
+          </button>
+        </div>
+      }
+    </nav>
+  }
+
+  <!-- Main Content -->
+  <main class="conteudo fade-in">
+    <router-outlet></router-outlet>
+  </main>
+</div>

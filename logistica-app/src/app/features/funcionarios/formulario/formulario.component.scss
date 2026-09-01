@@ -1,0 +1,12 @@
+.formulario {
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+}
+
+.acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}

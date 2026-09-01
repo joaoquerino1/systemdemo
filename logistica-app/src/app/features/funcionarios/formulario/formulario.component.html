@@ -1,0 +1,60 @@
+<h1>Novo funcionário</h1>
+
+<form [formGroup]="formulario" (ngSubmit)="salvar()" class="formulario">
+  <mat-form-field appearance="outline" class="campo-completo">
+    <mat-label>Nome completo</mat-label>
+    <input matInput formControlName="nome" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="campo-completo">
+    <mat-label>CPF (somente números)</mat-label>
+    <input matInput formControlName="cpf" maxlength="11" />
+    @if (formulario.get('cpf')?.hasError('pattern') && formulario.get('cpf')?.touched) {
+      <mat-error>CPF deve ter 11 dígitos, sem pontuação</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="campo-completo">
+    <mat-label>Matrícula</mat-label>
+    <input matInput formControlName="matricula" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="campo-completo">
+    <mat-label>Cargo (opcional)</mat-label>
+    <input matInput formControlName="cargo" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="campo-completo">
+    <mat-label>Setor (opcional)</mat-label>
+    <input matInput formControlName="setor" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="campo-completo">
+    <mat-label>Email</mat-label>
+    <input matInput type="email" formControlName="email" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="campo-completo">
+    <mat-label>Senha provisória</mat-label>
+    <input matInput type="password" formControlName="senha" />
+    @if (formulario.get('senha')?.hasError('minlength') && formulario.get('senha')?.touched) {
+      <mat-error>A senha deve ter pelo menos 8 caracteres</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="campo-completo">
+    <mat-label>Papel</mat-label>
+    <mat-select formControlName="role">
+      @for (papel of papeis; track papel) {
+        <mat-option [value]="papel">{{ papel }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="acoes">
+    <button mat-button type="button" routerLink="/dashboard/funcionarios">Cancelar</button>
+    <button mat-flat-button color="primary" type="submit" [disabled]="salvando()">
+      Salvar
+    </button>
+  </div>
+</form>

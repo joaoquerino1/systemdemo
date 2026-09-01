@@ -1,0 +1,140 @@
+<div class="cabecalho">
+  <h1>Ativos</h1>
+  @if (podeGerenciar()) {
+    <button mat-flat-button color="primary" routerLink="/dashboard/ativos/novo">
+      <mat-icon>add</mat-icon>
+      Novo ativo
+    </button>
+  }
+</div>
+
+<!-- Filters -->
+<mat-card class="filters-card">
+  <mat-card-content>
+    <div class="filters-row">
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Buscar</mat-label>
+        <input matInput placeholder="Nome ou codigo..." [ngModel]="filtroBusca()" (ngModelChange)="filtroBusca.set($event)" (keyup.enter)="aplicarFiltros()" />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Tipo</mat-label>
+        <mat-select [ngModel]="filtroTipo()" (ngModelChange)="filtroTipo.set($event)">
+          <mat-option value="">Todos</mat-option>
+          @for (tipo of tipos; track tipo) {
+            <mat-option [value]="tipo">{{ labelTipo(tipo) }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Status</mat-label>
+        <mat-select [ngModel]="filtroStatus()" (ngModelChange)="filtroStatus.set($event)">
+          <mat-option value="">Todos</mat-option>
+          @for (status of statusOpcoes; track status) {
+            <mat-option [value]="status">{{ labelStatus(status) }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <div class="filter-actions">
+        <button mat-flat-button color="primary" (click)="aplicarFiltros()">
+          <mat-icon>filter_list</mat-icon>
+          Filtrar
+        </button>
+        <button mat-stroked-button (click)="limparFiltros()">
+          Limpar
+        </button>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+@if (carregando()) {
+  <div class="carregando">
+    <mat-spinner diameter="32"></mat-spinner>
+  </div>
+} @else if (ativos().length === 0) {
+  <mat-card class="empty-card">
+    <mat-card-content>
+      <mat-icon class="empty-icon">inventory_2</mat-icon>
+      <p>Nenhum ativo encontrado.</p>
+    </mat-card-content>
+  </mat-card>
+} @else {
+  <mat-card>
+    <table mat-table [dataSource]="ativos()" class="tabela">
+      <ng-container matColumnDef="codigo">
+        <th mat-header-cell *matHeaderCellDef>Codigo</th>
+        <td mat-cell *matCellDef="let ativo">
+          <strong>{{ ativo.codigo }}</strong>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td mat-cell *matCellDef="let ativo">{{ ativo.nome }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="tipo">
+        <th mat-header-cell *matHeaderCellDef>Tipo</th>
+        <td mat-cell *matCellDef="let ativo">{{ labelTipo(ativo.tipo) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let ativo">
+          <span class="chip-status" [ngClass]="corDoStatus(ativo.status)">
+            {{ labelStatus(ativo.status) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Acoes</th>
+        <td mat-cell *matCellDef="let ativo">
+          @if (ativo.status === 'DISPONIVEL') {
+            <button mat-button color="primary" (click)="abrirRetirada(ativo)">
+              <mat-icon>swap_horiz</mat-icon> Retirar
+            </button>
+          }
+          @if (ativo.status === 'EM_USO') {
+            <button mat-button color="accent" (click)="abrirDevolucao(ativo)">
+              <mat-icon>assignment_return</mat-icon> Devolver
+            </button>
+          }
+          @if (podeGerenciar()) {
+            <button mat-icon-button [routerLink]="['/ativos', ativo.codigo, 'editar']" title="Editar">
+              <mat-icon>edit</mat-icon>
+            </button>
+            @if (ativo.status !== 'EM_USO' && ativo.ativo) {
+              <button mat-icon-button (click)="desativar(ativo)" title="Desativar" color="warn">
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
+          }
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+      <tr mat-row *matRowDef="let row; columns: colunas"></tr>
+    </table>
+  </mat-card>
+
+  <!-- Pagination -->
+  @if (totalPaginas() > 1) {
+    <div class="pagination">
+      <button mat-stroked-button [disabled]="paginaAtual() === 0" (click)="paginaAnterior()">
+        <mat-icon>chevron_left</mat-icon> Anterior
+      </button>
+      <span class="page-info">
+        Pagina {{ paginaAtual() + 1 }} de {{ totalPaginas() }}
+        ({{ totalElementos() }} itens)
+      </span>
+      <button mat-stroked-button [disabled]="paginaAtual() >= totalPaginas() - 1" (click)="proximaPagina()">
+        Proximo <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  }
+}

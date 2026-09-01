@@ -1,0 +1,164 @@
+# =============================================================================
+# Bravial Demo - CI Pipeline
+# =============================================================================
+# Runs on every push and PR to main. Builds both backend and frontend in
+# parallel, runs tests, and builds Docker images to catch issues early.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  JAVA_VERSION: "17"
+  NODE_VERSION: "20"
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Backend: Build & Test (Spring Boot + PostgreSQL)
+  # ---------------------------------------------------------------------------
+  backend:
+    name: Backend (Spring Boot)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: bravial_test
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U test -d bravial_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: temurin
+          cache: maven
+
+      - name: Build with Maven (skip tests)
+        working-directory: logistica-api
+        run: mvn -B package -DskipTests
+
+      - name: Run unit tests
+        working-directory: logistica-api
+        run: >
+          mvn -B test
+          -Dskip.testcontainers=true
+          -Dspring.datasource.url=jdbc:postgresql://localhost:5432/bravial_test
+          -Dspring.datasource.username=test
+          -Dspring.datasource.password=test
+          -Dspring.flyway.schemas=producao
+          -Dspring.flyway.defaultSchema=producao
+          -Dspring.jpa.properties.hibernate.default_schema=producao
+        env:
+          SPRING_PROFILES_ACTIVE: test
+
+      - name: Upload backend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: logistica-api/target/*.jar
+          retention-days: 3
+
+  # ---------------------------------------------------------------------------
+  # Frontend: Build & Lint (Angular 18)
+  # ---------------------------------------------------------------------------
+  frontend:
+    name: Frontend (Angular)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: logistica-app/package-lock.json
+
+      - name: Install dependencies
+        working-directory: logistica-app
+        run: npm ci
+
+      - name: Build production bundle
+        working-directory: logistica-app
+        run: npm run build -- --configuration production
+
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: logistica-app/dist/bravial-demo-app/browser/
+          retention-days: 3
+
+  # ---------------------------------------------------------------------------
+  # Docker: Build images (only on main branch, not on PRs)
+  # ---------------------------------------------------------------------------
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build backend image (no push)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: logistica-api/Dockerfile
+          push: false
+          tags: bravial-demo-api:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build frontend image (no push)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: logistica-app/Dockerfile
+          push: false
+          tags: bravial-demo-app:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ---------------------------------------------------------------------------
+  # Summary: Fail the workflow if any job fails
+  # ---------------------------------------------------------------------------
+  ci-success:
+    name: CI Passed
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    if: always()
+    steps:
+      - name: Check all jobs
+        run: |
+          if [ "${{ needs.backend.result }}" != "success" ] || [ "${{ needs.frontend.result }}" != "success" ]; then
+            echo "❌ CI failed:"
+            echo "  Backend: ${{ needs.backend.result }}"
+            echo "  Frontend: ${{ needs.frontend.result }}"
+            exit 1
+          fi
+          echo "✅ All CI checks passed!"

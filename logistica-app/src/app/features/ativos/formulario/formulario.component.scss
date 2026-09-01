@@ -1,0 +1,25 @@
+.formulario {
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+}
+
+.secao {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 8px 16px 0;
+  margin-bottom: 16px;
+
+  legend {
+    padding: 0 6px;
+    font-size: 0.85rem;
+    color: #666;
+  }
+}
+
+.acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
