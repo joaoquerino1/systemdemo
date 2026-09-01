@@ -18,10 +18,10 @@ env:
 
 jobs:
   # ---------------------------------------------------------------------------
-  # Backend: Build & Test (Spring Boot + PostgreSQL)
+  # Backend: Unit Tests (Spring Boot + PostgreSQL via service container)
   # ---------------------------------------------------------------------------
   backend:
-    name: Backend (Spring Boot)
+    name: Backend (Unit Tests)
     runs-on: ubuntu-latest
 
     services:
@@ -56,7 +56,7 @@ jobs:
 
       - name: Run unit tests
         working-directory: logistica-api
-        run: >
+        run: >-
           mvn -B test
           -Dskip.testcontainers=true
           -Dspring.datasource.url=jdbc:postgresql://localhost:5432/bravial_test
@@ -68,18 +68,64 @@ jobs:
         env:
           SPRING_PROFILES_ACTIVE: test
 
-      - name: Upload backend artifact
-        uses: actions/upload-artifact@v4
+  # ---------------------------------------------------------------------------
+  # Backend: E2E Tests (Testcontainers spins up its own PostgreSQL)
+  # ---------------------------------------------------------------------------
+  backend-e2e:
+    name: Backend (E2E Tests - Testcontainers)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
         with:
-          name: backend-jar
-          path: logistica-api/target/*.jar
-          retention-days: 3
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: temurin
+          cache: maven
+
+      - name: Run E2E tests
+        working-directory: logistica-api
+        run: >-
+          mvn -B test
+          -Dtest=FluxoCompletoE2ETest
+          -Dspring.profiles.active=test
+        env:
+          TESTCONTAINERS_RYUK_DISABLED: "false"
 
   # ---------------------------------------------------------------------------
-  # Frontend: Build & Lint (Angular 18)
+  # Frontend: Unit Tests (Karma + ChromeHeadless)
+  # ---------------------------------------------------------------------------
+  frontend-test:
+    name: Frontend (Unit Tests)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: logistica-app/package-lock.json
+
+      - name: Install dependencies
+        working-directory: logistica-app
+        run: npm ci
+
+      - name: Run unit tests
+        working-directory: logistica-app
+        run: npx ng test --watch=false
+
+  # ---------------------------------------------------------------------------
+  # Frontend: Build (Angular 18)
   # ---------------------------------------------------------------------------
   frontend:
-    name: Frontend (Angular)
+    name: Frontend (Build)
     runs-on: ubuntu-latest
 
     steps:
@@ -105,7 +151,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-dist
-          path: logistica-app/dist/bravial-demo-app/browser/
+          path: logistica-app/dist/logistica-app/browser/
           retention-days: 3
 
   # ---------------------------------------------------------------------------
@@ -114,7 +160,7 @@ jobs:
   docker:
     name: Docker Build
     runs-on: ubuntu-latest
-    needs: [backend, frontend]
+    needs: [backend, backend-e2e, frontend, frontend-test]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
@@ -150,15 +196,20 @@ jobs:
   ci-success:
     name: CI Passed
     runs-on: ubuntu-latest
-    needs: [backend, frontend]
+    needs: [backend, backend-e2e, frontend, frontend-test]
     if: always()
     steps:
       - name: Check all jobs
         run: |
-          if [ "${{ needs.backend.result }}" != "success" ] || [ "${{ needs.frontend.result }}" != "success" ]; then
+          if [ "${{ needs.backend.result }}" != "success" ] || \
+             [ "${{ needs.backend-e2e.result }}" != "success" ] || \
+             [ "${{ needs.frontend.result }}" != "success" ] || \
+             [ "${{ needs.frontend-test.result }}" != "success" ]; then
             echo "❌ CI failed:"
-            echo "  Backend: ${{ needs.backend.result }}"
-            echo "  Frontend: ${{ needs.frontend.result }}"
+            echo "  Backend (Unit Tests):  ${{ needs.backend.result }}"
+            echo "  Backend (E2E Tests):   ${{ needs.backend-e2e.result }}"
+            echo "  Frontend (Build):      ${{ needs.frontend.result }}"
+            echo "  Frontend (Unit Tests): ${{ needs.frontend-test.result }}"
             exit 1
           fi
           echo "✅ All CI checks passed!"
