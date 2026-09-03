@@ -28,7 +28,7 @@ A **TechFrame Tecnologia Ltda** e uma empresa de instalacoes eletricas e fibra o
 - **Ponto manual:** Controle de jornada em planilha, sujeito a erros e fraudes
 - **Folha de hora demorada:** Geracao manual do documento legal exigido por lei
 
-O Bravial resolve tudo isso em um sistema unico, acessivel via web e mobile.
+O TechFrameSystem resolve tudo isso em um sistema unico, acessivel via web e mobile.
 
 ---
 
