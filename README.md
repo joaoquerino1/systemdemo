@@ -1,6 +1,6 @@
-# Bravial Demo
+# System Demo
 
-**Demo publica do Bravial** - Sistema logistico interno para gestao de ativos, controle de ponto e folha de hora.
+**Demo publica do Sistema de Gestão de Ativos e Inventarios** - Sistema logistico interno para gestao de ativos, controle de ponto e folha de hora.
 
 > Este e um repositorio de demonstracao com dados ficticios da empresa **TechFrame Tecnologia Ltda**.
 > Mantem a mesma arquitetura do sistema de producao, mas com dados seguros para exposicao publica.
