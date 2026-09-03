@@ -83,6 +83,7 @@ spring:
       on-profile: test
   jpa:
     show-sql: false
+
 app:
   jwt:
     secret: test-secret-for-e2e-only-minimum-32-chars-ok
