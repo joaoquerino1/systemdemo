@@ -2,7 +2,7 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: bravial_demo
+      POSTGRES_DB: systemdemo
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
@@ -10,7 +10,7 @@ services:
     ports:
       - "5433:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d bravial_demo"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d systemdemo"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -20,7 +20,7 @@ services:
       context: .
       dockerfile: logistica-api/Dockerfile
     environment:
-      DB_URL: jdbc:postgresql://db:5432/bravial_demo
+      DB_URL: jdbc:postgresql://db:5432/systemdemo
       DB_USER: postgres
       DB_PASSWORD: postgres
       JWT_SECRET: ${JWT_SECRET:-systemdemo-secret-change-in-production-32ch}

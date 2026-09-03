@@ -1,5 +1,5 @@
 # =============================================================================
-# Bravial Demo - CI Pipeline
+#  SystemDemo - Pipeline
 # =============================================================================
 # Runs on every push and PR to main. Builds both backend and frontend in
 # parallel, runs tests, and builds Docker images to catch issues early.
@@ -28,13 +28,13 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_DB: bravial_test
+          POSTGRES_DB: systemdemo
           POSTGRES_USER: test
           POSTGRES_PASSWORD: test
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U test -d bravial_test"
+          --health-cmd "pg_isready -U test -d systemdemo"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -59,7 +59,7 @@ jobs:
         run: >-
           mvn -B test
           -Dskip.testcontainers=true
-          -Dspring.datasource.url=jdbc:postgresql://localhost:5432/bravial_test
+          -Dspring.datasource.url=jdbc:postgresql://localhost:5432/systemdemo
           -Dspring.datasource.username=test
           -Dspring.datasource.password=test
           -Dspring.flyway.schemas=producao
