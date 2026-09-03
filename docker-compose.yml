@@ -23,7 +23,7 @@ services:
       DB_URL: jdbc:postgresql://db:5432/bravial_demo
       DB_USER: postgres
       DB_PASSWORD: postgres
-      JWT_SECRET: ${JWT_SECRET:-bravial-demo-secret-change-in-production-32ch}
+      JWT_SECRET: ${JWT_SECRET:-systemdemo-secret-change-in-production-32ch}
       CORS_ORIGENS: http://localhost
       SPRING_PROFILES_ACTIVE: production
       EMPRESA_NOME: TechFrame Tecnologia Ltda

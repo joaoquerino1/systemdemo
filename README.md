@@ -60,7 +60,7 @@ O Bravial resolve tudo isso em um sistema unico, acessivel via web e mobile.
 ## Arquitetura
 
 ```
-bravial-demo/
+systemdemo/
 ├── logistica-api/              # Backend Spring Boot
 │   ├── src/main/java/.../
 │   │   ├── controller/         # REST controllers
@@ -105,12 +105,13 @@ bravial-demo/
 
 ```bash
 # Criar o banco
-psql -U postgres -c "CREATE DATABASE bravial_demo;"
+psql -U postgres -c "CREATE DATABASE systemdemo"
 ```
 
 ### 2. Backend
 
 ```bash
+cd systemdemo
 cd logistica-api
 cp ../.env.example .env
 mvn spring-boot:run

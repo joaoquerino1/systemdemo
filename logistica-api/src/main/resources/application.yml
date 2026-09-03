@@ -1,6 +1,6 @@
 spring:
   application:
-    name: bravial-demo-api
+    name: systemdemo-api
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:default}
 
@@ -54,7 +54,7 @@ springdoc:
 
 app:
   jwt:
-    secret: ${JWT_SECRET:bravial-demo-secret-change-in-production-32ch}
+    secret: ${JWT_SECRET:systemdemo-secret-change-in-production-32ch}
     expiracao-horas: 8
   empresa:
     nome: ${EMPRESA_NOME:TechFrame Tecnologia Ltda}

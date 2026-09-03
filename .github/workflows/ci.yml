@@ -176,7 +176,7 @@ jobs:
           context: .
           file: logistica-api/Dockerfile
           push: false
-          tags: bravial-demo-api:latest
+          tags: systemdemo-api:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -186,7 +186,7 @@ jobs:
           context: .
           file: logistica-app/Dockerfile
           push: false
-          tags: bravial-demo-app:latest
+          tags: systemdemo-app:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
