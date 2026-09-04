@@ -5,7 +5,7 @@
       <mat-icon>{{ menuAberto() ? 'close' : 'menu' }}</mat-icon>
     </button>
 
-    <button class="app-title" (click)="irParaDashboard()">Bravial</button>
+    <button class="app-title" (click)="irParaDashboard()">SystemDemo</button>
 
     <!-- Desktop Navigation -->
     <nav class="nav-desktop">
@@ -47,7 +47,7 @@
     <div class="sidebar-overlay" (click)="menuAberto.set(false)"></div>
     <nav class="sidebar">
       <div class="sidebar-header">
-        <button class="sidebar-title" (click)="irParaDashboard()">Bravial</button>
+        <button class="sidebar-title" (click)="irParaDashboard()">SystemDemo</button>
       </div>
       <div class="sidebar-nav">
         <a routerLink="/dashboard/ativos" (click)="menuAberto.set(false)" class="sidebar-link">

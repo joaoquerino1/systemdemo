@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 
         <div class="logo-section">
           <mat-icon class="logo-icon">local_shipping</mat-icon>
-          <h1>Bravial</h1>
+          <h1>SystemDemo</h1>
           <p class="tagline">Sistema Logistico Interno</p>
           <p class="company">TechFrame Tecnologia Ltda</p>
         </div>

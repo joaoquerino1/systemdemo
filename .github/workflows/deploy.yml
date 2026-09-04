@@ -1,5 +1,5 @@
 # =============================================================================
-# Bravial Demo - Deploy to Railway
+# SystemDemo - Deploy to Railway
 # =============================================================================
 # Deploys the backend API to Railway on push to main.
 # Requires RAILWAY_TOKEN and RAILWAY_SERVICE_ID secrets.
