@@ -1,0 +1,8 @@
+{
+  "name": "systemdemo",
+  "private": true,
+  "description": "Railway Infrastructure-as-Code for the SystemDemo project (.railway/railway.ts)",
+  "devDependencies": {
+    "railway": "latest"
+  }
+}
