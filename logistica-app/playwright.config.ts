@@ -13,7 +13,8 @@ export default defineConfig({
   retries: 0,
   reporter: [['list']],
   use: {
-    baseURL: 'http://localhost',
+    // Point at a deployed stack with E2E_BASE_URL, e.g. a Railway domain
+    baseURL: process.env.E2E_BASE_URL ?? 'http://localhost',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
