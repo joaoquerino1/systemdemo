@@ -17,8 +17,8 @@ services:
 
   backend:
     build:
-      context: .
-      dockerfile: logistica-api/Dockerfile
+      context: ./logistica-api
+      dockerfile: Dockerfile
     environment:
       DB_URL: jdbc:postgresql://db:5432/systemdemo
       DB_USER: postgres
@@ -42,10 +42,13 @@ services:
 
   frontend:
     build:
-      context: .
-      dockerfile: logistica-app/Dockerfile
+      context: ./logistica-app
+      dockerfile: Dockerfile
       args:
         API_URL: http://localhost/api
+    environment:
+      PORT: "80"
+      BACKEND_INTERNAL_URL: http://backend:8080
     ports:
       - "80:80"
     depends_on:
@@ -53,4 +56,4 @@ services:
         condition: service_healthy
 
 volumes:
-  postgres-data:
+  postgres-data:
