@@ -6,11 +6,13 @@ export default defineRailway(() => {
 
   const api = service("api", {
     source: github("joaoquerino1/systemdemo", { branch: "master", rootDirectory: "logistica-api", checkSuites: false }),
+    build: { watchPatterns: ["/logistica-api/**"] },
     replicas: { "ams": 1 },
     env: { CORS_ORIGENS: preserve(), DB_PASSWORD: preserve(), DB_URL: preserve(), DB_USER: preserve(), EMPRESA_CNPJ: preserve(), EMPRESA_NOME: preserve(), JWT_SECRET: preserve(), SPRING_PROFILES_ACTIVE: preserve() },
   });
   const app = service("app", {
     source: github("joaoquerino1/systemdemo", { branch: "master", rootDirectory: "logistica-app", checkSuites: false }),
+    build: { watchPatterns: ["/logistica-app/**"] },
     replicas: { "ams": 1 },
     env: { BACKEND_INTERNAL_URL: preserve() },
   });
