@@ -1,0 +1,55 @@
+# =============================================================================
+# SystemDemo - Deploy to Railway (GitHub Actions)
+# =============================================================================
+# Deploys the backend API and frontend app to Railway on every push to master.
+#
+# Why Actions instead of Railway's native GitHub deploys: Railway's webhook
+# builds deterministically use the API's Dockerfile for the app service when a
+# project has multiple Dockerfile services from one repo, so native deploys of
+# the app always fail. `railway up` from each service directory is reliable.
+# Deploying sequentially (api, then app) also avoids overlapping builds.
+#
+# Requires one repo secret: RAILWAY_TOKEN
+#   Create it at https://railway.com/account/tokens (Account > Tokens)
+#   Then: repo Settings > Secrets and variables > Actions > New repository
+#   secret > name: RAILWAY_TOKEN
+#
+# Project/service IDs are identifiers (not secrets) and are hardcoded below.
+
+name: Deploy to Railway
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy api + app to Railway
+    runs-on: ubuntu-latest
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      RAILWAY_PROJECT_ID: 96313a0c-452a-4c5f-9479-f1b997d925e4
+      RAILWAY_API_SERVICE_ID: 3accec38-1f2a-4745-8819-839a20cfd06e
+      RAILWAY_APP_SERVICE_ID: afdbd91a-1f92-4f8d-89de-f892c044d900
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check RAILWAY_TOKEN secret is set
+        if: env.RAILWAY_TOKEN == ''
+        run: |
+          echo "::error::Missing RAILWAY_TOKEN repo secret. Create a token at https://railway.com/account/tokens, then add it as a repository secret named RAILWAY_TOKEN (Settings > Secrets and variables > Actions)."
+          exit 1
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy backend API
+        working-directory: logistica-api
+        run: railway up --service ${{ env.RAILWAY_API_SERVICE_ID }} --project ${{ env.RAILWAY_PROJECT_ID }} --environment production --ci --yes
+
+      - name: Deploy frontend app
+        working-directory: logistica-app
+        run: railway up --service ${{ env.RAILWAY_APP_SERVICE_ID }} --project ${{ env.RAILWAY_PROJECT_ID }} --environment production --ci --yes
