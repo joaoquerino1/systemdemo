@@ -31,3 +31,5 @@ Login credentials used by the tests come from the demo seed data
 (`V5__seed_demo_data.sql`): `admin@techframe.com` / `demo12345`.
 
 `test-results/` (artifacts) is gitignored.
+
+> First run downloads the Chromium browser (`npx playwright install chromium`).
