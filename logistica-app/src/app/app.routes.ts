@@ -10,6 +10,9 @@ import { PontoComponent } from './features/ponto/ponto.component';
 import { FolhaHoraComponent } from './features/folha-hora/folha-hora.component';
 import { FuncionariosListaComponent } from './features/funcionarios/lista/lista.component';
 import { FuncionarioFormularioComponent } from './features/funcionarios/formulario/formulario.component';
+import { ProducaoListaComponent } from './features/producao/lista/lista.component';
+import { ProducaoDetalheComponent } from './features/producao/detalhe/detalhe.component';
+import { ProducaoFormularioComponent } from './features/producao/formulario/formulario.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -32,6 +35,13 @@ export const routes: Routes = [
         data: { papeis: ['ADMIN', 'GESTOR'] },
       },
       { path: 'ponto', component: PontoComponent },
+      { path: 'producao', component: ProducaoListaComponent },
+      {
+        path: 'producao/nova',
+        component: ProducaoFormularioComponent,
+        data: { papeis: ['ADMIN', 'GESTOR'] },
+      },
+      { path: 'producao/:id', component: ProducaoDetalheComponent },
       { path: 'folha-hora', component: FolhaHoraComponent },
       {
         path: 'funcionarios',

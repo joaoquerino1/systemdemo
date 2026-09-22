@@ -18,7 +18,7 @@ import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.List;
@@ -157,7 +157,8 @@ public class FolhaHoraService {
         return celula;
     }
 
-    private String formatarHora(LocalTime hora) {
+    private String formatarHora(LocalDateTime hora) {
+        // no PDF interessa so a parte HH:mm da marcacao
         return hora != null ? hora.format(FMT_HORA) : "-";
     }
 

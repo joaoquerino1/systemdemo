@@ -9,7 +9,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 /**
  * Registro diario de ponto de um funcionario. Batido individualmente
@@ -40,17 +39,19 @@ public class RegistroPonto {
     @Column(nullable = false)
     private LocalDate data;
 
+    // Marcacoes como TIMESTAMP (data + hora do instante do batimento).
+    // A coluna data permanece DATE: dia comercial, base da unicidade.
     @Column(name = "hora_entrada")
-    private LocalTime horaEntrada;
+    private LocalDateTime horaEntrada;
 
     @Column(name = "hora_saida_intervalo")
-    private LocalTime horaSaidaIntervalo;
+    private LocalDateTime horaSaidaIntervalo;
 
     @Column(name = "hora_volta_intervalo")
-    private LocalTime horaVoltaIntervalo;
+    private LocalDateTime horaVoltaIntervalo;
 
     @Column(name = "hora_saida")
-    private LocalTime horaSaida;
+    private LocalDateTime horaSaida;
 
     // Confirmacao do funcionario ao bater o ponto (equivale a
     // uma assinatura previamente preenchida)

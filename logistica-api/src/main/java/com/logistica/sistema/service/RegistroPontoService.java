@@ -6,12 +6,13 @@ import com.logistica.sistema.model.RegistroPonto;
 import com.logistica.sistema.model.Usuario;
 import com.logistica.sistema.repository.RegistroPontoRepository;
 import com.logistica.sistema.repository.UsuarioRepository;
+import com.logistica.sistema.util.HorarioBrasil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -33,7 +34,10 @@ public class RegistroPontoService {
      */
     @Transactional
     public RegistroPontoResponse registrarEntrada(Long usuarioId) {
-        LocalDate hoje = LocalDate.now();
+        // Datas/horas sempre no fuso de Brasilia - LocalDate.now() sem
+        // zone seguiria o fuso da JVM (UTC no servidor) e deslocaria
+        // os pontos em ate 3h para o usuario brasileiro.
+        LocalDate hoje = HorarioBrasil.hoje();
         Usuario usuario = buscarUsuario(usuarioId);
 
         RegistroPonto registro = registroPontoRepository
@@ -50,7 +54,7 @@ public class RegistroPontoService {
                     .data(hoje)
                     .build();
         }
-        registro.setHoraEntrada(LocalTime.now());
+        registro.setHoraEntrada(HorarioBrasil.agoraCompleta());
         registro.setConfirmado(true);
 
         return RegistroPontoResponse.from(registroPontoRepository.save(registro));
@@ -65,7 +69,7 @@ public class RegistroPontoService {
         if (registro.getHoraSaidaIntervalo() != null) {
             throw new RegraNegocioException("Você já registrou saída para o intervalo hoje.");
         }
-        registro.setHoraSaidaIntervalo(LocalTime.now());
+        registro.setHoraSaidaIntervalo(HorarioBrasil.agoraCompleta());
         return RegistroPontoResponse.from(registroPontoRepository.save(registro));
     }
 
@@ -78,7 +82,7 @@ public class RegistroPontoService {
         if (registro.getHoraVoltaIntervalo() != null) {
             throw new RegraNegocioException("Você já registrou a volta do intervalo hoje.");
         }
-        registro.setHoraVoltaIntervalo(LocalTime.now());
+        registro.setHoraVoltaIntervalo(HorarioBrasil.agoraCompleta());
         return RegistroPontoResponse.from(registroPontoRepository.save(registro));
     }
 
@@ -93,12 +97,12 @@ public class RegistroPontoService {
             throw new RegraNegocioException("Você já registrou saída hoje.");
         }
 
-        registro.setHoraSaida(LocalTime.now());
+        registro.setHoraSaida(HorarioBrasil.agoraCompleta());
         return RegistroPontoResponse.from(registroPontoRepository.save(registro));
     }
 
     private RegistroPonto buscarRegistroDeHoje(Long usuarioId) {
-        return registroPontoRepository.findByUsuarioIdAndData(usuarioId, LocalDate.now())
+        return registroPontoRepository.findByUsuarioIdAndData(usuarioId, HorarioBrasil.hoje())
                 .orElseThrow(() -> new RegraNegocioException(
                         "Registre a entrada antes de continuar."));
     }

@@ -86,7 +86,11 @@ export class PontoComponent implements OnInit {
     });
   }
 
+  // Marcacoes agora sao ISO datetime (yyyy-MM-ddTHH:mm:ss); exibe so
+  // a parte HH:mm. Tolerante ao formato antigo (HH:mm:ss).
   formatarHora(hora: string | null): string {
-    return hora ? hora.substring(0, 5) : '-';
+    if (!hora) return '-';
+    const temData = hora.includes('T');
+    return temData ? hora.substring(11, 16) : hora.substring(0, 5);
   }
 }

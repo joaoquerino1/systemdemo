@@ -3,16 +3,16 @@ package com.logistica.sistema.dto;
 import com.logistica.sistema.model.RegistroPonto;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public record RegistroPontoResponse(
         Long id,
         String usuarioNome,
         LocalDate data,
-        LocalTime horaEntrada,
-        LocalTime horaSaidaIntervalo,
-        LocalTime horaVoltaIntervalo,
-        LocalTime horaSaida,
+        LocalDateTime horaEntrada,
+        LocalDateTime horaSaidaIntervalo,
+        LocalDateTime horaVoltaIntervalo,
+        LocalDateTime horaSaida,
         boolean confirmado
 ) {
     public static RegistroPontoResponse from(RegistroPonto r) {
