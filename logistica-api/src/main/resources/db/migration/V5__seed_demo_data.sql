@@ -1,4 +1,4 @@
--- V5: Seed data for SystemDemo - TechFrame Tecnologia Ltda
+-- V5: Seed data for TechFrame - TechFrame Tecnologia Ltda
 -- Fictional installation company with demo assets, employees, and history
 --
 -- Password for all users: demo12345 (BCrypt hash)

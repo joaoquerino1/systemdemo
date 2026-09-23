@@ -6,7 +6,7 @@ test.describe('Autenticacao', () => {
     const erros = coletarErros(page);
 
     await page.goto('/');
-    await expect(page.getByRole('heading', { name: 'SystemDemo' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'techframe' })).toBeVisible();
     await expect(page.getByText('Sistema Logistico Interno')).toBeVisible();
 
     await page.getByRole('link', { name: /Entrar no Demo/i }).click();

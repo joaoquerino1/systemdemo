@@ -1,5 +1,5 @@
 # =============================================================================
-#  SystemDemo - Pipeline
+#  techframe - Pipeline
 # =============================================================================
 # Runs on every push and PR to main. Builds both backend and frontend in
 # parallel, runs tests, and builds Docker images to catch issues early.
@@ -28,13 +28,13 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_DB: systemdemo
+          POSTGRES_DB: techframe
           POSTGRES_USER: test
           POSTGRES_PASSWORD: test
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U test -d systemdemo"
+          --health-cmd "pg_isready -U test -d techframe"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -59,7 +59,7 @@ jobs:
         run: >-
           mvn -B test
           -Dskip.testcontainers=true
-          -Dspring.datasource.url=jdbc:postgresql://localhost:5432/systemdemo
+          -Dspring.datasource.url=jdbc:postgresql://localhost:5432/techframe
           -Dspring.datasource.username=test
           -Dspring.datasource.password=test
           -Dspring.flyway.schemas=producao
@@ -176,7 +176,7 @@ jobs:
           context: .
           file: logistica-api/Dockerfile
           push: false
-          tags: systemdemo-api:latest
+          tags: techframe-api:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -186,7 +186,7 @@ jobs:
           context: .
           file: logistica-app/Dockerfile
           push: false
-          tags: systemdemo-app:latest
+          tags: techframe-app:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

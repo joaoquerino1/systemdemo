@@ -14,8 +14,6 @@
 | Funcao | Email | Senha |
 |--------|-------|-------|
 | Administrador | `admin@techframe.com` | `demo12345` |
-| Gestor | `gestor@techframe.com` | `demo12345` |
-| Funcionario | `joao@techframe.com` | `demo12345` |
 
 ---
 
@@ -28,7 +26,7 @@ A **TechFrame Tecnologia Ltda** e uma empresa de instalacoes eletricas e fibra o
 - **Ponto manual:** Controle de jornada em planilha, sujeito a erros e fraudes
 - **Folha de hora demorada:** Geracao manual do documento legal exigido por lei
 
-O SystemDemo resolve tudo isso em um sistema unico, acessivel via web e mobile.
+O techframe resolve tudo isso em um sistema unico, acessivel via web e mobile.
 
 ---
 
@@ -60,7 +58,7 @@ O SystemDemo resolve tudo isso em um sistema unico, acessivel via web e mobile.
 ## Arquitetura
 
 ```
-systemdemo/
+techframe/
 ├── logistica-api/              # Backend Spring Boot
 │   ├── src/main/java/.../
 │   │   ├── controller/         # REST controllers
@@ -105,13 +103,13 @@ systemdemo/
 
 ```bash
 # Criar o banco
-psql -U postgres -c "CREATE DATABASE systemdemo"
+psql -U postgres -c "CREATE DATABASE techframe"
 ```
 
 ### 2. Backend
 
 ```bash
-cd systemdemo
+cd techframe
 cd logistica-api
 cp ../.env.example .env
 mvn spring-boot:run

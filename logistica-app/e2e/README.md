@@ -5,7 +5,7 @@ End-to-end tests that exercise the real UI against a running stack.
 ## Against the local Docker stack
 
 ```bash
-docker compose up --build -d   # from the repo root (systemdemo/)
+docker compose up --build -d   # from the repo root (techframe/)
 npm run test:e2e               # from logistica-app/
 ```
 
