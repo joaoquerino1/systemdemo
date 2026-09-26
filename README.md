@@ -26,7 +26,7 @@ A **TechFrame Tecnologia Ltda** e uma empresa de instalacoes eletricas e fibra o
 - **Ponto manual:** Controle de jornada em planilha, sujeito a erros e fraudes
 - **Folha de hora demorada:** Geracao manual do documento legal exigido por lei
 
-O techframe resolve tudo isso em um sistema unico, acessivel via web e mobile.
+O TechFrame resolve tudo isso em um sistema unico, acessivel via web e mobile.
 
 ---
 
@@ -58,7 +58,7 @@ O techframe resolve tudo isso em um sistema unico, acessivel via web e mobile.
 ## Arquitetura
 
 ```
-techframe/
+TechFrame/
 ├── logistica-api/              # Backend Spring Boot
 │   ├── src/main/java/.../
 │   │   ├── controller/         # REST controllers
@@ -103,13 +103,13 @@ techframe/
 
 ```bash
 # Criar o banco
-psql -U postgres -c "CREATE DATABASE techframe"
+psql -U postgres -c "CREATE DATABASE TechFrame"
 ```
 
 ### 2. Backend
 
 ```bash
-cd techframe
+cd TechFrame
 cd logistica-api
 cp ../.env.example .env
 mvn spring-boot:run

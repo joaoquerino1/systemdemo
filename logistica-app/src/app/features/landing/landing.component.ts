@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 
         <div class="logo-section">
           <mat-icon class="logo-icon">local_shipping</mat-icon>
-          <h1>techframe</h1>
+          <h1>TechFrame</h1>
           <p class="tagline">Sistema Logistico Interno</p>
           <p class="company">TechFrame Tecnologia Ltda</p>
         </div>
@@ -41,7 +41,7 @@ import { MatIconModule } from '@angular/material/icon';
 
         <a mat-flat-button color="primary" routerLink="/login" class="enter-button">
           <mat-icon>login</mat-icon>
-          Entrar no Demo
+          Entrar
         </a>
       </div>
     </div>

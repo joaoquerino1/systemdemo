@@ -1,5 +1,5 @@
 # =============================================================================
-# techframe - Deploy to Railway (GitHub Actions)
+# TechFrame - Deploy to Railway (GitHub Actions)
 # =============================================================================
 # Deploys the backend API and frontend app to Railway on every push to master.
 #
